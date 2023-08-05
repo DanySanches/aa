@@ -34,25 +34,25 @@ function preload(){
 }
 
 function setup() {
-  //atividade 1  trocar o tamanho do canvas
+  //atividade 1 - Definir o tamanho do canvas com base na largura e altura da janela:
   createCanvas(windowWidth, windowHeight);
   
-  //atividade 2 alterar a posiçao do  tres
-  trex = createSprite(50,height-70,20,50);
+  //atividade 2 alterar a posiçao do  trex para que  ele  fique  centralizado na  tela
+  trex = createSprite(width/8,height-70,20,50);
   
   trex.addAnimation("running", trex_running);
   trex.addAnimation("collided", trex_collided);
   trex.scale = 0.5;
-  // atividade 3 alterar a posição do  solo
+  // atividade 3 alterar a posição do  solo para que  ele  fique  centralizado na  tela
   ground = createSprite(width/2,height-10,width,20);
   ground.addImage("ground",groundImage);
   ground.x = ground.width /2;
   ground.velocityX = -(6 + 3*score/100);
-  // atividade  4 alterar a posição do gameOver
+  // atividade  4 alterar a posição do gameOver para que  ele  fique  centralizado na  tela
   gameOver = createSprite(width/2,height/2- 50);
   gameOver.addImage(gameOverImg);
   
-  // atividade  5 alterar a posição restart
+  // atividade  5 alterar a posição restart para que  ele  fique  centralizado na  tela
   restart = createSprite(width/2,height/2);
   restart.addImage(restartImg);
   
@@ -62,7 +62,7 @@ function setup() {
   gameOver.visible = false;
   restart.visible = false;
   
-  // atividade  6 alterar a posição do invisibleGround
+  // atividade  6 alterar a posição do invisibleGround para que ele fique no final da tela:
   invisibleGround = createSprite(width/2,height-10,width,10);
   invisibleGround.visible = false;
   
@@ -75,13 +75,14 @@ function setup() {
 function draw() {
   //trex.debug = true;
   background(255);
-  text("Pontuação: "+ score, 800,50);
+  //  atividade 7 Ajustar o tamanho e a posição da pontuação para que ela fique sempre visível independentemente do tamanho da tela:
+  text("Pontuação: "+ score, width-150,50);
    
   if (gameState===PLAY){
     score = score + Math.round(getFrameRate()/60);
     ground.velocityX = -(6 + 3*score/100);
   
-    // deixar o  touches, para  permitir q o rex  pule pelo  toque
+    // ativdade 8- deixar o  touches, para  permitir q o rex  pule pelo  toque
     if(( touches.length > 0 || keyDown("space")) && trex.y >= 159) {
       trex.velocityY = -12;
       touches = [];
@@ -104,17 +105,12 @@ function draw() {
   else if (gameState === END) {
     gameOver.visible = true;
     restart.visible = true;
-    
-    //defina a velocidade da cada objeto do jogo para 0
+  
     ground.velocityX = 0;
     trex.velocityY = 0;
     obstaclesGroup.setVelocityXEach(0);
     cloudsGroup.setVelocityXEach(0);
-    
-    //mude a animação do trex
     trex.changeAnimation("collided",trex_collided);
-    
-    //defina o tempo de vida dos objetos para que eles nunca sejam destruídos
     obstaclesGroup.setLifetimeEach(-1);
     cloudsGroup.setLifetimeEach(-1);
     
@@ -128,22 +124,23 @@ function draw() {
 }
 
 function spawnClouds() {
-  //escreva o código aqui para fazer as nuvens surgirem
+ 
   if (frameCount % 60 === 0) {
-    var cloud = createSprite(600,120,40,10);
-    cloud.y = Math.round(random(80,120));
+    // atividade 9 Ajustar a posição das nuvens para que eles não fiquem fora da tela:
+    var cloud = createSprite(width , random(80,120), 40,10);
+    // cloud.y = Math.round(random(80,120));
     cloud.addImage(cloudImage);
     cloud.scale = 0.5;
     cloud.velocityX = -3;
+   
+    cloud.lifetime = width / cloud.velocityX; // Ajustar o tempo de vida da nuvem
+
     
-     //designe tempo de vida para a variável
-    cloud.lifetime = 200;
-    
-    //ajuste a profundidade
+
     cloud.depth = trex.depth;
     trex.depth = trex.depth + 1;
     
-    //adicione cada nuvem ao grupo
+    
     cloudsGroup.add(cloud);
   }
   
@@ -152,8 +149,8 @@ function spawnClouds() {
 function spawnObstacles() {
   if(frameCount % 60 === 0) {
    
-  // atividade  7 alterar a posição do obstaculo
-    var obstacle = createSprite(width/2,height-30,width,40);
+  // atividade 10 ajustar a posição obstáculos para que eles não fiquem fora da tela: 
+    var obstacle = createSprite(width,height-30,width,40);
     //obstacle.debug = true;
     obstacle.velocityX = -(6 + 3*score/100);   
     
@@ -175,10 +172,9 @@ function spawnObstacles() {
       default: break;
     }
     
-    //designe o escalonamento e tempo de vida ao obstáculo           
+            
     obstacle.scale = 0.5;
     obstacle.lifetime = 300;
-    //adicione cada obstáculo ao grupo
     obstaclesGroup.add(obstacle);
   }
 }
